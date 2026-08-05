@@ -244,9 +244,8 @@ export default function App() {
     setStatus('Exporting frames…')
     try {
       const result = await downloadFrames(project)
-      const pack = result.zipped
-        ? `zip with ${result.files.length} PNGs`
-        : `1 PNG (${result.files[0].width}×${result.files[0].height})`
+      const slicePngs = result.files.length - 1
+      const pack = `zip with ${slicePngs} slice PNG${slicePngs === 1 ? '' : 's'} + frames-all.png`
       const clampNote =
         result.clampCount > 0
           ? ` Border clamped on ${result.clampCount} slice${result.clampCount === 1 ? '' : 's'} (too thick for size).`
@@ -410,7 +409,9 @@ export default function App() {
               {framesMenuOpen && (
                 <div className="toolbar-menu" role="dialog" aria-label="Slice frames export">
                   <p className="toolbar-menu-hint">
-                    Hollow white border PNGs for Radar / outline FX (not Load Input Map).
+                    Per-slice hollow PNGs plus <code>frames-all.png</code> (all
+                    borders on the composition) for Radar / outline FX — not Load
+                    Input Map.
                   </p>
                   <label className="field">
                     <span>Border (px)</span>
@@ -1008,8 +1009,8 @@ export default function App() {
               </li>
               <li>Canvas: Ctrl/⌘+scroll zoom · scroll / Space-drag to pan</li>
               <li>
-                <strong>Export → Slice Frames</strong> opens border size, then downloads hollow
-                PNGs for Radar / outline FX
+                <strong>Export → Slice Frames</strong> downloads per-slice borders plus{' '}
+                <code>frames-all.png</code> (all borders on one composition image)
               </li>
               <li>XML import is best-effort (rectangular InputRect only)</li>
             </ul>

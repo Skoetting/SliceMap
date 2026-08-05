@@ -1,5 +1,6 @@
 import {
   buildZipStore,
+  COMPOSITE_FRAME_FILENAME,
   effectiveFrameBorder,
   sanitizeFrameBaseName,
   uniqueFrameFilenames,
@@ -32,6 +33,11 @@ const names = uniqueFrameFilenames([
 assert(names[0] === 'frame-A.png', names[0])
 assert(names[1] === 'frame-A-2.png', names[1])
 assert(names[2] === 'frame-B.png', names[2])
+
+assert(
+  COMPOSITE_FRAME_FILENAME === 'frames-all.png',
+  'composite filename',
+)
 
 const zip = buildZipStore([
   { name: 'a.txt', data: new TextEncoder().encode('hi') },

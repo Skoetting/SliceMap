@@ -1,4 +1,8 @@
+import { applySliceTransform, clampPositiveSize } from './geometry'
 import { clampFrameBorderPx, type Slice, type SliceMapProject } from './types'
+
+/** Composition-sized PNG with every slice border drawn in place. */
+export const COMPOSITE_FRAME_FILENAME = 'frames-all.png'
 
 export interface FrameFile {
   filename: string
@@ -51,6 +55,7 @@ export function uniqueFrameFilenames(slices: Pick<Slice, 'name'>[]): string[] {
   })
 }
 
+/** Hollow white frame in top-left pixel space (per-slice PNG). */
 function renderFrameCanvas(
   width: number,
   height: number,
@@ -63,16 +68,73 @@ function renderFrameCanvas(
   if (!ctx) throw new Error('Could not create canvas context')
 
   ctx.clearRect(0, 0, width, height)
+  fillHollowRect(ctx, 0, 0, width, height, border)
+  return canvas
+}
+
+function fillHollowRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  border: number,
+): void {
   ctx.fillStyle = '#FFFFFF'
   ctx.beginPath()
-  ctx.rect(0, 0, width, height)
+  ctx.rect(x, y, width, height)
   const innerW = width - border * 2
   const innerH = height - border * 2
   if (innerW > 0 && innerH > 0) {
-    ctx.rect(border, border, innerW, innerH)
+    ctx.rect(x + border, y + border, innerW, innerH)
   }
   ctx.fill('evenodd')
-  return canvas
+}
+
+/** Draw one hollow frame in slice local space (origin at slice center). */
+function drawHollowFrameLocal(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  border: number,
+): void {
+  fillHollowRect(ctx, -width / 2, -height / 2, width, height, border)
+}
+
+/**
+ * Composition-sized transparent PNG with all slice borders at their
+ * position / rotation (same geometry as the editor).
+ */
+export function renderCompositeFramesCanvas(
+  project: SliceMapProject,
+  requestedBorder: number,
+): { canvas: HTMLCanvasElement; clampCount: number } {
+  const canvas = document.createElement('canvas')
+  canvas.width = project.composition.width
+  canvas.height = project.composition.height
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('Could not create canvas context')
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  let clampCount = 0
+  for (const slice of project.slices) {
+    const width = clampPositiveSize(Math.round(slice.width))
+    const height = clampPositiveSize(Math.round(slice.height))
+    const { border, clamped } = effectiveFrameBorder(
+      width,
+      height,
+      requestedBorder,
+    )
+    if (clamped) clampCount += 1
+
+    ctx.save()
+    applySliceTransform(ctx, slice)
+    drawHollowFrameLocal(ctx, width, height, border)
+    ctx.restore()
+  }
+
+  return { canvas, clampCount }
 }
 
 function canvasToPngBlob(canvas: HTMLCanvasElement): Promise<Blob> {
@@ -210,8 +272,8 @@ export function buildZipStore(files: { name: string; data: Uint8Array }[]): Blob
 }
 
 /**
- * Build per-slice hollow frame PNGs. Throws if there are no slices.
- * Does not trigger download — use {@link downloadFrames}.
+ * Build per-slice hollow frame PNGs plus one composition-sized composite.
+ * Throws if there are no slices. Does not trigger download — use {@link downloadFrames}.
  */
 export async function buildSliceFrames(
   project: SliceMapProject,
@@ -243,6 +305,20 @@ export async function buildSliceFrames(
     })
   }
 
+  const { canvas: compositeCanvas } = renderCompositeFramesCanvas(
+    project,
+    requested,
+  )
+  const compositeBlob = await canvasToPngBlob(compositeCanvas)
+  files.push({
+    filename: COMPOSITE_FRAME_FILENAME,
+    blob: compositeBlob,
+    width: project.composition.width,
+    height: project.composition.height,
+    borderPx: requested,
+    clamped: clampCount > 0,
+  })
+
   return { files, clampCount }
 }
 
@@ -253,11 +329,7 @@ export async function downloadFrames(
   const safeProject =
     project.name.trim().replace(/[^\w.-]+/g, '_') || 'slicemap'
 
-  if (files.length === 1) {
-    downloadBlob(files[0].filename, files[0].blob)
-    return { files, zipped: false, clampCount }
-  }
-
+  // Always zip: per-slice PNG(s) + composition composite.
   const zipEntries = await Promise.all(
     files.map(async (file) => ({
       name: file.filename,

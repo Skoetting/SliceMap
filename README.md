@@ -8,7 +8,7 @@ Browser app for designing **Resolume Arena / Avenue input maps**.
 
 - **Input Map PNG** — export a composition-sized map for Advanced Output → **Load Input Map**
 - **Test Video MP4** — H.264 wall / LED stress tests from the same layout
-- **Slice Frames** — hollow white border PNGs (border px in **Export → Slice Frames**) for Radar-style outline FX, no plugins
+- **Slice Frames** — hollow white border PNGs per slice **plus** one composition image with all borders (`frames-all.png`); border px in **Export → Slice Frames**
 - **Import Advanced Output** — load an existing screen-setup XML (rectangular InputRect, best-effort)
 - **Canvas editor** — move / resize / rotate, magnetic snap, zoom & pan, soft overlap hints
 - **Exact pixels** — set composition size; slices have name, color, offset, width, height, rotation
@@ -88,9 +88,13 @@ Notes:
 
 ### Export Slice Frames (outline FX)
 
-Top toolbar: **Export → Slice Frames** opens a menu for border thickness (px), then exports one PNG per slice (slice width×height): transparent interior, opaque white border. Use with Resolume Radar (or similar) for outline looks without plugins.
+Top toolbar: **Export → Slice Frames** opens a menu for border thickness (px), then downloads a zip with:
 
-- One slice → single PNG; multiple → zip
+- one PNG per slice (slice width×height): transparent interior, opaque white border
+- **`frames-all.png`** — composition-sized image with every slice border drawn at its position / rotation
+
+Use with Resolume Radar (or similar) for outline looks without plugins.
+
 - Independent of the Input Map outline stroke
 - Not a substitute for Load Input Map
 
