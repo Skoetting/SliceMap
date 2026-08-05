@@ -1,0 +1,14 @@
+node_modules
+dist
+dist-ssr
+.git
+.github
+.cursor
+openspec
+docs
+*.md
+.DS_Store
+*.log
+.env*
+*.local
+coverage

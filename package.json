@@ -1,0 +1,33 @@
+{
+  "name": "slicemap",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "verify:roundtrip": "npx --yes tsx src/scripts/run-roundtrip.ts",
+    "verify:snap": "npx --yes tsx src/scripts/run-snap-tests.ts",
+    "verify:offset": "npx --yes tsx src/scripts/run-offset-tests.ts",
+    "verify:overlap": "npx --yes tsx src/scripts/run-overlap-tests.ts",
+    "verify:resolume-xml": "npx --yes tsx src/scripts/run-resolume-xml-tests.ts",
+    "verify:frames": "npx --yes tsx src/scripts/run-frame-export-tests.ts"
+  },
+  "dependencies": {
+    "mp4-muxer": "^5.2.2",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "oxlint": "^1.71.0",
+    "playwright": "^1.55.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.1.1"
+  }
+}

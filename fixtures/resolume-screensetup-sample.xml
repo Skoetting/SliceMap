@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Anonymized Resolume Arena Advanced Output screen-setup fixture (best-effort).
+  Structure mirrors public forum samples: XmlState → ScreenSetup → screens → Screen → layers → Slice → InputRect.
+  Format is unofficial and may change across Resolume versions.
+-->
+<XmlState name="SliceMapFixture">
+	<ScreenSetup name="ScreenSetup">
+		<CurrentCompositionTextureSize name="0:1" width="1920" height="1080"/>
+		<screens>
+			<Screen name="LED Wall" uniqueId="1001">
+				<Params name="Common">
+					<Param name="Name" default="Screen" value="LED Wall"/>
+				</Params>
+				<layers>
+					<Slice uniqueId="2001">
+						<Params name="Common">
+							<Param name="Name" default="Layer" value="Left Panel"/>
+							<Param name="Enabled" default="1" value="1"/>
+						</Params>
+						<InputRect orientation="0">
+							<v x="0" y="100"/>
+							<v x="640" y="100"/>
+							<v x="640" y="820"/>
+							<v x="0" y="820"/>
+						</InputRect>
+						<OutputRect orientation="0">
+							<v x="0" y="0"/>
+							<v x="640" y="0"/>
+							<v x="640" y="720"/>
+							<v x="0" y="720"/>
+						</OutputRect>
+					</Slice>
+					<Slice uniqueId="2002">
+						<Params name="Common">
+							<Param name="Name" default="Layer" value="Right Panel"/>
+							<Param name="Enabled" default="1" value="1"/>
+						</Params>
+						<!-- 400×200 rectangle centered ~ (1400, 540), rotation 30° -->
+						<InputRect orientation="30">
+							<v x="1276.795" y="353.397"/>
+							<v x="1623.205" y="553.397"/>
+							<v x="1523.205" y="726.603"/>
+							<v x="1176.795" y="526.603"/>
+						</InputRect>
+						<OutputRect orientation="0">
+							<v x="0" y="0"/>
+							<v x="400" y="0"/>
+							<v x="400" y="200"/>
+							<v x="0" y="200"/>
+						</OutputRect>
+					</Slice>
+					<Slice uniqueId="2003">
+						<Params name="Common">
+							<Param name="Name" default="Layer" value="Warped Skip"/>
+						</Params>
+						<!-- Non-rectangular trapezoid — should be skipped -->
+						<InputRect orientation="0">
+							<v x="700" y="200"/>
+							<v x="1100" y="220"/>
+							<v x="1050" y="600"/>
+							<v x="720" y="580"/>
+						</InputRect>
+						<OutputRect orientation="0">
+							<v x="0" y="0"/>
+							<v x="100" y="0"/>
+							<v x="100" y="100"/>
+							<v x="0" y="100"/>
+						</OutputRect>
+					</Slice>
+				</layers>
+			</Screen>
+		</screens>
+	</ScreenSetup>
+</XmlState>

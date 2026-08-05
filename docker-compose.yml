@@ -1,0 +1,7 @@
+services:
+  slicemap:
+    build: .
+    image: slicemap:local
+    ports:
+      - "8080:80"
+    restart: unless-stopped
