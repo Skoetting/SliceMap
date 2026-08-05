@@ -4,13 +4,17 @@ Browser app for designing **Resolume Arena / Avenue input maps**.
 
 **Use it online:** [https://skoetting.github.io/SliceMap/](https://skoetting.github.io/SliceMap/)
 
-Arrange rectangular slices on your composition, then export:
+## Features
 
-- **Input Map** PNG → Advanced Output → **Load Input Map**
-- **Test Video** MP4 → wall / LED stress tests
-- **Slice Frames** → hollow border PNGs for Radar-style outline FX (no plugins)
+- **Input Map PNG** — export a composition-sized map for Advanced Output → **Load Input Map**
+- **Test Video MP4** — H.264 wall / LED stress tests from the same layout
+- **Slice Frames** — hollow white border PNGs (border px in **Export → Slice Frames**) for Radar-style outline FX, no plugins
+- **Import Advanced Output** — load an existing screen-setup XML (rectangular InputRect, best-effort)
+- **Canvas editor** — move / resize / rotate, magnetic snap, zoom & pan, soft overlap hints
+- **Exact pixels** — set composition size; slices have name, color, offset, width, height, rotation
+- **Project JSON** — save / load layouts (`version: 1`)
 
-Free, static (no backend). Run locally with npm, on **GitHub Pages**, or with **Docker**.
+Free and static (no backend). Run in the browser, with npm, or with Docker.
 
 ## Quick start (Docker)
 
@@ -37,18 +41,6 @@ docker run --rm -p 8080:80 slicemap
 ```
 
 Then open http://localhost:8080/
-
-## Features
-
-- Composition size control (exports at exact pixel dimensions)
-- Rectangular slices: name, color, offset, width, height, rotation
-- Canvas editor with move / resize / rotate, magnetic snap, zoom & pan
-- Soft overlap hints (overlaps are still allowed)
-- **Import Advanced Output** screen-setup XML (best-effort)
-- **Export → Input Map** PNG for Load Input Map
-- **Export → Slice Frames** menu (border px + hollow white border PNGs; zip when multiple)
-- **Export Test Video** (H.264 MP4) from the sidebar
-- Save / load projects as JSON
 
 ## Local development (npm)
 
@@ -105,32 +97,6 @@ Top toolbar: **Export → Slice Frames** opens a menu for border thickness (px),
 ## Project JSON
 
 Saved files use schema `version: 1` with composition, slices (`cx`, `cy`, `width`, `height`, `rotationDeg`, `color`), and export settings.
-
-## Deploy
-
-### GitHub Pages
-
-Live app: **[https://skoetting.github.io/SliceMap/](https://skoetting.github.io/SliceMap/)**
-
-This repo includes `.github/workflows/deploy-pages.yml`. On push to `main`:
-
-1. Repo **Settings → Pages → Source: GitHub Actions**
-2. Workflow builds with Vite base `/SliceMap/` and publishes `dist/`
-
-### Docker image (registry)
-
-Build and push if you host your own registry:
-
-```bash
-docker build -t your-registry/slicemap:latest .
-docker push your-registry/slicemap:latest
-```
-
-Pull and run elsewhere:
-
-```bash
-docker run --rm -p 8080:80 your-registry/slicemap:latest
-```
 
 ## License
 
