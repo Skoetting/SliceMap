@@ -343,7 +343,17 @@ export default function App() {
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark">SliceMap</span>
-          <span className="brand-sub">Resolume Arena input maps</span>
+          <span className="brand-sub">
+            Resolume Arena input maps ·{' '}
+            <a
+              className="brand-github"
+              href="https://github.com/Skoetting/SliceMap"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+          </span>
         </div>
         <div className="top-actions">
           <div className="action-group" role="group" aria-label="Project">

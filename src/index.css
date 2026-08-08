@@ -84,6 +84,17 @@ input {
   font-size: 0.8rem;
 }
 
+.brand-github {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.brand-github:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 .top-actions {
   display: flex;
   flex-wrap: wrap;
